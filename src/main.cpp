@@ -11,6 +11,7 @@ void auto2() {
 void initialize() {
 	hugui::initialize_auton_selector({
 	});
+	intake.setOpticalColourRanges(330, 45, 80, 290);
 	chassis.calibrate();
 	master.rumble(".");
 }

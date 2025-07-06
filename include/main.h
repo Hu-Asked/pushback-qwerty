@@ -44,6 +44,7 @@
 
  #include "lemlib/api.hpp"
  #include "HuGUI/hugui.hpp"
+ #include "intake.hpp"
  #include "declare.hpp"
  #include "distanceReset.hpp"
  

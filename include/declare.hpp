@@ -32,3 +32,5 @@ extern pros::MotorGroup RightDrive;
 extern pros::IMU imu;
 
 extern lemlib::Chassis chassis;
+
+extern hulib::Intake intake;
