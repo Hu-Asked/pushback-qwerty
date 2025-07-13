@@ -5,30 +5,36 @@ int hopperColourSortTime = 150;
 namespace hulib
 {
 
-    Intake::Intake(pros::Motor& primaryIntakeMotor, pros::Motor& hopperMotor, pros::Motor& scoringMotor, pros::Optical& hopperOptical)
+    Intake::Intake(pros::Motor &primaryIntakeMotor, pros::Motor &hopperMotor, pros::Motor &scoringMotor, pros::Optical &hopperOptical)
         : primaryIntakeMotor(primaryIntakeMotor), hopperMotor(hopperMotor), scoringMotor(scoringMotor), hopperOptical(hopperOptical) {}
 
     void Intake::setIntakeSpeed(double speed)
     {
         intakeSpeed = speed;
+
+        switch (intakeState)
+        {
+        case IntakeState::Direct:
+            primaryIntakeMotor.move(intakeSpeed);
+            hopperMotor.move(intakeSpeed);
+            break;
+        case IntakeState::Load:
+            primaryIntakeMotor.move(intakeSpeed);
+            hopperMotor.move(-abs(intakeSpeed));
+            break;
+        }
+
         switch (scoringState)
         {
         case ScoringState::Long:
-            primaryIntakeMotor.move(intakeSpeed);
-            hopperMotor.move(intakeSpeed);
             scoringMotor.move(intakeSpeed);
             break;
         case ScoringState::Centre:
-            primaryIntakeMotor.move(intakeSpeed);
-            hopperMotor.move(intakeSpeed);
-            scoringMotor.move(-intakeSpeed);
-            break;
-        case ScoringState::Load:
-            primaryIntakeMotor.move(intakeSpeed);
-            hopperMotor.move(-intakeSpeed);
-            scoringMotor.move(0);
+            scoringMotor.move(-intakeSpeed*0.4);
+            primaryIntakeMotor.move(intakeSpeed*0.4);
             break;
         }
+
         prevIntakeSpeed = intakeSpeed;
     }
 
@@ -45,7 +51,7 @@ namespace hulib
         colourToSort = colour;
     }
 
-    hulib::Colour Intake::getColour(pros::Optical& chosenOptical)
+    hulib::Colour Intake::getColour(pros::Optical &chosenOptical)
     {
         double hue = chosenOptical.get_hue();
 
@@ -61,6 +67,12 @@ namespace hulib
     }
 
     void Intake::setScoringState(ScoringState state) { this->scoringState = state; }
+
+    void Intake::setIntakeState(IntakeState state) { this->intakeState = state; }
+
+    int Intake::getScoringState() { return static_cast<int>(scoringState); }
+
+    int Intake::getIntakeState() { return static_cast<int>(intakeState); }
 
     void Intake::setFeedFromHopper(bool feedFromHopper) { this->feedFromHopper = feedFromHopper; }
 

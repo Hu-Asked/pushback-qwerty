@@ -44,8 +44,8 @@ lemlib::ControllerSettings angularController(1.65, // proportional gain (kP)  2.
 // pros::Motor m5(10, pros::MotorGearset::blue, pros::MotorUnits::degrees);
 // pros::Motor m6(6, pros::MotorGearset::blue, pros::MotorUnits::degrees);
 
-pros::MotorGroup LeftDrive({-18, -19, 20}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
-pros::MotorGroup RightDrive({11, 12, -13}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
+pros::MotorGroup LeftDrive({-1, -2, -3}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
+pros::MotorGroup RightDrive({8, 9, 10}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
 
 lemlib::Drivetrain driveTrain(&LeftDrive, &RightDrive, trackWidth, lemlib::Omniwheel::NEW_325, 450, 2);
 
@@ -87,8 +87,8 @@ lemlib::Chassis chassis(driveTrain,
 
 //          Intake
 
-pros::Motor primaryIntakeMotor(3, pros::MotorGearset::blue, pros::MotorUnits::degrees);
-pros::Motor hopperMotor(4, pros::MotorGearset::blue, pros::MotorUnits::degrees);
-pros::Motor scoringMotor(5, pros::MotorGearset::blue, pros::MotorUnits::degrees);
+pros::Motor primaryIntakeMotor(11, pros::MotorGearset::blue, pros::MotorUnits::degrees);
+pros::Motor hopperMotor(-20, pros::MotorGearset::green, pros::MotorUnits::degrees);
+pros::Motor scoringMotor(-7, pros::MotorGearset::green, pros::MotorUnits::degrees);
 pros::Optical hopperOptical(6);
 hulib::Intake intake(primaryIntakeMotor, hopperMotor, scoringMotor, hopperOptical);

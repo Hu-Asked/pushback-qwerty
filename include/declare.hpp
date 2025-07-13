@@ -1,8 +1,8 @@
 #pragma once
 
-#define PROS_USE_SIMPLE_NAMES
-
 #include "main.h"
+
+#define PROS_USE_SIMPLE_NAMES
 
 extern const double wheelDiameter;
 extern const double gearRatio;
@@ -32,5 +32,9 @@ extern pros::MotorGroup RightDrive;
 extern pros::IMU imu;
 
 extern lemlib::Chassis chassis;
+
+namespace hulib {
+    class Intake;
+}
 
 extern hulib::Intake intake;

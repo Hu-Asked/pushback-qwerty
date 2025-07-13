@@ -44,10 +44,10 @@
 
  #include "lemlib/api.hpp"
  #include "HuGUI/hugui.hpp"
- #include "intake.hpp"
- #include "declare.hpp"
+ #include "subsystems/intake.hpp"
  #include "distanceReset.hpp"
- 
+ #include "declare.hpp"
+
  //#include "okapi/api.hpp"
  
  /**

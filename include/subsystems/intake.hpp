@@ -1,6 +1,6 @@
 #pragma once
 
-#include "main.h";
+#include "main.h"
 
 namespace hulib
 {
@@ -13,7 +13,12 @@ namespace hulib
     enum class ScoringState
     {
         Long,
-        Centre,
+        Centre
+    };
+
+    enum class IntakeState
+    {
+        Direct,
         Load
     };
 
@@ -66,9 +71,19 @@ namespace hulib
         /**
          * @brief sets the scoring state of the intake system
          *
-         * @param state the state to set the scoring system to, long, centre or load (straight into the hopper)
+         * @param state the state to set the scoring system to, long or centre
          */
         void setScoringState(ScoringState state);
+        
+        /**
+         * @brief returns the current scoring state of the intake system
+         *
+         * @param state the state to set the intake system to, direct or load (into the hopper)
+         */
+        void setIntakeState(IntakeState state);
+
+        int getScoringState();
+        int getIntakeState();
 
         /**
          * @brief sets the hopper feed state
@@ -94,6 +109,7 @@ namespace hulib
 
         bool feedFromHopper = false;
         ScoringState scoringState;
+        IntakeState intakeState;
 
         int RED_MIN = 0;
         int RED_MAX = 0;
