@@ -52,15 +52,15 @@ lemlib::Drivetrain driveTrain(&LeftDrive, &RightDrive, trackWidth, lemlib::Omniw
 pros::IMU imu(1);
 
 //          ODOMETRY
-pros::Rotation horizontal_encoder(16);
+// pros::Rotation horizontal_encoder(16);
 pros::Rotation vertical_encoder(-15);
 
-lemlib::TrackingWheel horizontalTrackingWheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0.07874);
+// lemlib::TrackingWheel horizontalTrackingWheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0.07874);
 lemlib::TrackingWheel verticalTrackingWheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 0.905512);
 
 lemlib::OdomSensors sensors(&verticalTrackingWheel, // vertical tracking wheel
                             nullptr,
-                            &horizontalTrackingWheel, // horizontal tracking wheel
+                            nullptr, // horizontal tracking wheel
                             nullptr,
                             &imu,
                             1);
@@ -87,8 +87,10 @@ lemlib::Chassis chassis(driveTrain,
 
 //          Intake
 
-pros::Motor primaryIntakeMotor(11, pros::MotorGearset::blue, pros::MotorUnits::degrees);
+pros::Motor firstStageIntakeMotor(-12, pros::MotorGearset::green, pros::MotorUnits::degrees);
+pros::Motor secondStageIntakeMotor(11, pros::MotorGearset::green, pros::MotorUnits::degrees);
 pros::Motor hopperMotor(-20, pros::MotorGearset::green, pros::MotorUnits::degrees);
 pros::Motor scoringMotor(-7, pros::MotorGearset::green, pros::MotorUnits::degrees);
-pros::Optical hopperOptical(6);
-hulib::Intake intake(primaryIntakeMotor, hopperMotor, scoringMotor, hopperOptical);
+pros::Optical hopperOptical(13);
+pros::Optical secondaryOptical(14);
+hulib::Intake intake(firstStageIntakeMotor, secondStageIntakeMotor, hopperMotor, scoringMotor, hopperOptical, secondaryOptical);

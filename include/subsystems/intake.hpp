@@ -13,13 +13,14 @@ namespace hulib
     enum class ScoringState
     {
         Long,
-        Centre
+        Centre,
+        Hold
     };
 
     enum class IntakeState
     {
         Direct,
-        Load
+        Feed
     };
 
     class Intake
@@ -28,13 +29,15 @@ namespace hulib
         /**
          * @brief constructs an Intake object used for controlling the intake system
          *
-         * @param primaryIntakeMotor the main motor used for the control of the intake throughout the robot
+         * @param firstStageIntakeMotor the main motor used for the control of the intake for the first half of the intake system
+         * @param secondStageIntakeMotor the motor used for the control of the intake for the second half of the intake system
          * @param hopperMotor the motor responsible for moving the blocks from the intake to the hopper
          * @param scoringMotor the motor responsible for scoring the blocks in the high or low goals
          * @param hopperOptical the optical sensor used to detect the colour of the blocks before the hopper
+         * @param secondaryOptical the optical sensor used to detect the colour of the blocks after the hopper
          *
          */
-        Intake(pros::Motor& primaryIntakeMotor, pros::Motor& hopperMotor, pros::Motor& scoringMotor, pros::Optical& hopperOptical);
+        Intake(pros::Motor& firstStageIntakeMotor, pros::Motor& secondStageIntakeMotor, pros::Motor& hopperMotor, pros::Motor& scoringMotor, pros::Optical& hopperOptical, pros::Optical& secondaryOptical);
 
         /**
          * @brief sets the speed of the overall intake system
@@ -61,6 +64,8 @@ namespace hulib
          */
         void chooseColourToSort(hulib::Colour colour);
 
+        int getColourToSort();
+
         /**
          * @brief returns the colour detected by the optical sensor
          *
@@ -71,14 +76,14 @@ namespace hulib
         /**
          * @brief sets the scoring state of the intake system
          *
-         * @param state the state to set the scoring system to, long or centre
+         * @param state the state to set the scoring system to, long, centre or hold
          */
         void setScoringState(ScoringState state);
         
         /**
          * @brief returns the current scoring state of the intake system
          *
-         * @param state the state to set the intake system to, direct or load (into the hopper)
+         * @param state the state to set the intake system to, direct, load, or feed
          */
         void setIntakeState(IntakeState state);
 
@@ -86,28 +91,26 @@ namespace hulib
         int getIntakeState();
 
         /**
-         * @brief sets the hopper feed state
-         *
-         * @param feedFromHopper true if the hopper will feed into the intake system, false if it will not
-         */
-        void setFeedFromHopper(bool feedFromHopper);
-
-        /**
          * @brief runs the intake task
          */
         void intakeTask();
 
+        bool isHopperSort = true;
+        bool isSecondarySort = true;
+
     private:
         void colourSortHopper();
+        void colourSortSecondary();
 
-        pros::Motor primaryIntakeMotor;
+        pros::Motor firstStageIntakeMotor;
+        pros::Motor secondStageIntakeMotor;
         pros::Motor hopperMotor;
         pros::Motor scoringMotor;
         pros::Optical hopperOptical;
+        pros::Optical secondaryOptical;
         double intakeSpeed = 0;
         double prevIntakeSpeed = 0;
 
-        bool feedFromHopper = false;
         ScoringState scoringState;
         IntakeState intakeState;
 

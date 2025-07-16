@@ -11,9 +11,22 @@ void auto2() {
 void initialize() {
 	hugui::initialize_auton_selector({
 	});
-	intake.setOpticalColourRanges(330, 45, 80, 290);
+	intake.setOpticalColourRanges(340, 30, 100, 290);
 	intake.setIntakeState(hulib::IntakeState::Direct);
 	intake.setScoringState(hulib::ScoringState::Long);
+
+	// if (!pros::competition::is_connected()) 
+    //     pros::Task update_info([&]() {  
+    //         while (true) {
+    //             // hugui::update_pos(chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta, 3);
+    //             pros::delay(25);
+    //         }
+    //     }); 
+
+	pros::Task intake_task([&]() { 
+		intake.intakeTask(); 
+	});
+	intake.chooseColourToSort(hulib::Colour::Blue);
 	chassis.calibrate();
 	master.rumble(".");
 }
@@ -39,28 +52,22 @@ void opcontrol() {
 
         int Y = master.get_analog(ANALOG_LEFT_Y);
         int X = master.get_analog(ANALOG_RIGHT_X);
-        chassis.curvature(Y, X);
-
-		if (master.get_digital(DIGITAL_R1)) {
-			intake.setIntakeSpeed(127);
-		} else if (master.get_digital(DIGITAL_L1)) {
-			intake.setIntakeSpeed(-127);
-		} else {
-			intake.setIntakeSpeed(0);
-		}
+        chassis.arcade(Y, X);
 
 		if(master.get_digital_new_press(DIGITAL_UP)) {
 			intake.setScoringState(hulib::ScoringState::Long);
 		} else if(master.get_digital_new_press(DIGITAL_DOWN)) {
 			intake.setScoringState(hulib::ScoringState::Centre);
+		} else if(master.get_digital_new_press(DIGITAL_B)) {
+			intake.setScoringState(hulib::ScoringState::Hold);
 		}
 
 		if(master.get_digital_new_press(DIGITAL_LEFT)) {
-			intake.setIntakeState(hulib::IntakeState::Load);
+			intake.chooseColourToSort(hulib::Colour::Blue);
 		} else if(master.get_digital_new_press(DIGITAL_RIGHT)) {
-			intake.setIntakeState(hulib::IntakeState::Direct);
+			intake.chooseColourToSort(hulib::Colour::Red);
 		}
-		master.print(0, 0, "%d %d", intake.getIntakeState(), intake.getScoringState());
+		master.print(0, 0, "%d %d", intake.getColourToSort(), intake.getScoringState());
 	
 		if(!isNotified && pros::millis() - startTime >= notifyTime) {
 			master.rumble("--------");
