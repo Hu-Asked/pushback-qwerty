@@ -27,9 +27,13 @@ namespace hulib
             if(!isSortingHopper) hopperMotor.move(intakeSpeed);
             break;
         case IntakeState::Feed:
-            firstStageIntakeMotor.move(-intakeSpeed*0.05);
             secondStageIntakeMotor.move(intakeSpeed);
             hopperMotor.move(intakeSpeed);
+            break;
+        case IntakeState::Load:
+            firstStageIntakeMotor.move(intakeSpeed);
+            secondStageIntakeMotor.move(intakeSpeed);
+            hopperMotor.move(-abs(intakeSpeed));
             break;
         }
 
@@ -50,9 +54,10 @@ namespace hulib
             if (colour != hulib::Colour::None && colour != colourToSort) {
                 scoringMotor.move(0);
                 secondStageIntakeMotor.move(0);
+                hopperMotor.move(intakeSpeed*0.3);
             } else {
-                scoringMotor.move(intakeSpeed*0.6);
-                secondStageIntakeMotor.move(intakeSpeed);
+                scoringMotor.move(intakeSpeed*0.3);
+                secondStageIntakeMotor.move(intakeSpeed*0.3);
             }
             break;
         }
@@ -73,10 +78,7 @@ namespace hulib
         colourToSort = colour;
     }
 
-    int Intake::getColourToSort()
-    {
-        return static_cast<int>(colourToSort);
-    }
+    Colour Intake::getColourToSort() { return colourToSort; }
 
     hulib::Colour Intake::getColour(pros::Optical &chosenOptical)
     {
@@ -101,13 +103,18 @@ namespace hulib
         prevIntakeState = state;
     }
 
-    int Intake::getScoringState() { return static_cast<int>(scoringState); }
+    ScoringState Intake::getScoringState() { return scoringState; }
 
-    int Intake::getIntakeState() { return static_cast<int>(intakeState); }
+    IntakeState Intake::getIntakeState() { return intakeState; }
 
     void Intake::colourSortHopper()
     {
-        hopperMotor.move(-127);
+        if (intakeState == IntakeState::Load) {
+            hopperMotor.move(127);
+            pros::delay(500);
+        } else {
+            hopperMotor.move(-127);
+        }
         pros::delay(hopperColourSortTime);
         setIntakeSpeed(intakeSpeed);
     }
@@ -121,7 +128,7 @@ namespace hulib
                 break;
             case ScoringState::Centre:
                 scoringMotor.move(127);
-                pros::delay(500);
+                pros::delay(750);
                 break;
         }
         setIntakeSpeed(intakeSpeed);
@@ -135,38 +142,41 @@ namespace hulib
         secondaryOptical.set_led_pwm(80);
         while (true) {
             isHopperSort = true;
-            
-            if (master.get_digital(DIGITAL_R1)) {
-                intake.setIntakeSpeed(127);
-            } else if (master.get_digital(DIGITAL_L1)) {
-                intake.setIntakeSpeed(-127);
-            } else if (master.get_digital(DIGITAL_R2)) {
-                isHopperSort = false;
-                intakeState = hulib::IntakeState::Feed;
-                intake.setIntakeSpeed(127);
-                intakeState = prevIntakeState;
-            } else if (master.get_digital(DIGITAL_L2)) {
-                isHopperSort = false;
-                intakeState = hulib::IntakeState::Feed;
-                intake.setIntakeSpeed(-127);
-                intakeState = prevIntakeState;
-            } else {
-                intake.setIntakeSpeed(0);
+            if(!pros::competition::is_autonomous()) {
+                if (master.get_digital(DIGITAL_R1)) {
+                    intakeState = hulib::IntakeState::Direct;
+                    intake.setIntakeSpeed(127);
+                } else if (master.get_digital(DIGITAL_L1)) {
+                    intakeState = hulib::IntakeState::Direct;
+                    intake.setIntakeSpeed(-127);
+                } else if (master.get_digital(DIGITAL_R2)) {
+                    isHopperSort = false;
+                    intakeState = hulib::IntakeState::Feed;
+                    intake.setIntakeSpeed(127);
+                    intakeState = prevIntakeState;
+                } else if (master.get_digital(DIGITAL_L2)) {
+                    isHopperSort = false;
+                    intakeState = hulib::IntakeState::Feed;
+                    intake.setIntakeSpeed(-127);
+                    intakeState = prevIntakeState;
+                } else {
+                    intake.setIntakeSpeed(0);
+                }
             }
-
             if (isHopperSort && colourToSort != hulib::Colour::None && getColour(hopperOptical) == colourToSort)
             {
                 colourSortHopper();
                 isSortingHopper = true;
             } else if (isSortingHopper) {
                 isSortingHopper = false;
-                hopperMotor.move(intakeSpeed);
+                setIntakeSpeed(prevIntakeSpeed);
             } else if (isSecondarySort && scoringState != hulib::ScoringState::Hold && colourToSort != hulib::Colour::None && getColour(secondaryOptical) == colourToSort)
             {
                 colourSortSecondary();
                 isSortingSecondary = true;
             } else if (isSortingSecondary) {
                 isSortingSecondary = false;
+                setIntakeSpeed(prevIntakeSpeed);
             }
             hugui::console_print(std::to_string((int) getColour(hopperOptical)) + " " + std::to_string((int) getColour(secondaryOptical)) + " " + std::to_string((int) colourToSort) + " " +
                                 std::to_string(hopperOptical.get_proximity()) + " " + std::to_string(secondaryOptical.get_proximity()), 0);

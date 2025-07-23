@@ -38,3 +38,5 @@ namespace hulib {
 }
 
 extern hulib::Intake intake;
+
+extern pros::adi::Pneumatics scraperPiston;

@@ -47,6 +47,7 @@
  #include "subsystems/intake.hpp"
  #include "distanceReset.hpp"
  #include "declare.hpp"
+ #include "autons.hpp"
 
  //#include "okapi/api.hpp"
  

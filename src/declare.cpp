@@ -12,9 +12,9 @@ const int TURNSPEED = 120.0f;
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 //          PID
-lemlib::ControllerSettings lateralController(5.5, // proportional gain (kP)
+lemlib::ControllerSettings lateralController(5, // proportional gain (kP)
                                              0,   // integral gain (kI)
-                                             4.5, // derivative gain (kD)
+                                             1, // derivative gain (kD)
                                              0,   // anti windup
                                              1,   // small error range, in inches
                                              100, // small error range timeout, in milliseconds
@@ -23,9 +23,9 @@ lemlib::ControllerSettings lateralController(5.5, // proportional gain (kP)
                                              127  // maximum acceleration (slew)
 );
 
-lemlib::ControllerSettings angularController(1.65, // proportional gain (kP)  2.23
-                                             0,    // integral gain (kI) 0.38
-                                             9,    // derivative gain (kD) 12.5
+lemlib::ControllerSettings angularController(1.6, // proportional gain (kP) 
+                                             0,    // integral gain (kI) 
+                                             10,    // derivative gain (kD)
                                              2,    // anti windup
                                              1,    // small error range, in degrees
                                              100,  // small error range timeout, in milliseconds
@@ -47,23 +47,23 @@ lemlib::ControllerSettings angularController(1.65, // proportional gain (kP)  2.
 pros::MotorGroup LeftDrive({-1, -2, -3}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
 pros::MotorGroup RightDrive({8, 9, 10}, pros::MotorGearset::blue, pros::MotorUnits::degrees);
 
-lemlib::Drivetrain driveTrain(&LeftDrive, &RightDrive, trackWidth, lemlib::Omniwheel::NEW_325, 450, 2);
+lemlib::Drivetrain driveTrain(&LeftDrive, &RightDrive, trackWidth, lemlib::Omniwheel::NEW_325, 450, 8);
 
-pros::IMU imu(1);
+pros::IMU imu(11);
 
 //          ODOMETRY
 // pros::Rotation horizontal_encoder(16);
-pros::Rotation vertical_encoder(-15);
+pros::Rotation vertical_encoder(-4);
 
 // lemlib::TrackingWheel horizontalTrackingWheel(&horizontal_encoder, lemlib::Omniwheel::NEW_2, 0.07874);
-lemlib::TrackingWheel verticalTrackingWheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 0.905512);
+lemlib::TrackingWheel verticalTrackingWheel(&vertical_encoder, lemlib::Omniwheel::NEW_2, 0.5);
 
 lemlib::OdomSensors sensors(&verticalTrackingWheel, // vertical tracking wheel
                             nullptr,
                             nullptr, // horizontal tracking wheel
-                            nullptr,
+                            nullptr,  
                             &imu,
-                            1);
+                            360/358.15);
 
 //          JOYSTICK CURVING
 
@@ -87,10 +87,13 @@ lemlib::Chassis chassis(driveTrain,
 
 //          Intake
 
-pros::Motor firstStageIntakeMotor(-12, pros::MotorGearset::green, pros::MotorUnits::degrees);
-pros::Motor secondStageIntakeMotor(11, pros::MotorGearset::green, pros::MotorUnits::degrees);
+pros::Motor firstStageIntakeMotor(-13, pros::MotorGearset::green, pros::MotorUnits::degrees);
+pros::Motor secondStageIntakeMotor(12, pros::MotorGearset::green, pros::MotorUnits::degrees);
 pros::Motor hopperMotor(-20, pros::MotorGearset::green, pros::MotorUnits::degrees);
 pros::Motor scoringMotor(-7, pros::MotorGearset::green, pros::MotorUnits::degrees);
-pros::Optical hopperOptical(13);
-pros::Optical secondaryOptical(14);
+pros::Optical hopperOptical(14);
+pros::Optical secondaryOptical(16);
 hulib::Intake intake(firstStageIntakeMotor, secondStageIntakeMotor, hopperMotor, scoringMotor, hopperOptical, secondaryOptical);
+
+//         Pneumatics
+pros::adi::Pneumatics scraperPiston('a', false);

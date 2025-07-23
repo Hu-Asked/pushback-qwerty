@@ -20,7 +20,8 @@ namespace hulib
     enum class IntakeState
     {
         Direct,
-        Feed
+        Feed,
+        Load
     };
 
     class Intake
@@ -64,7 +65,7 @@ namespace hulib
          */
         void chooseColourToSort(hulib::Colour colour);
 
-        int getColourToSort();
+        hulib::Colour getColourToSort();
 
         /**
          * @brief returns the colour detected by the optical sensor
@@ -87,8 +88,8 @@ namespace hulib
          */
         void setIntakeState(IntakeState state);
 
-        int getScoringState();
-        int getIntakeState();
+        hulib::ScoringState getScoringState();
+        hulib::IntakeState getIntakeState();
 
         /**
          * @brief runs the intake task
