@@ -16,7 +16,9 @@ void initialize() {
 		hugui::Auton(turn_example, "Turn Example", hugui::AutonType::OTHER),
 		hugui::Auton(driveOffLine, "Drive Off Line", hugui::AutonType::OTHER)
 	});
-	intake.setOpticalColourRanges(340, 30, 100, 290);
+	hugui::add_config_toggle(&intake.isHopperSort, "Hopper Sort");
+	hugui::add_config_toggle(&intake.isSecondarySort, "Secondary Sort");
+	intake.setOpticalColourRanges(340, 16, 100, 290);
 	intake.setIntakeState(hulib::IntakeState::Direct);
 	intake.setScoringState(hulib::ScoringState::Long);
 
@@ -114,6 +116,16 @@ void opcontrol() {
 			intake.chooseColourToSort(hulib::Colour::Blue);
 		} else if(master.get_digital_new_press(DIGITAL_RIGHT)) {
 			intake.chooseColourToSort(hulib::Colour::Red);
+		}
+
+		if(master.get_digital_new_press(DIGITAL_Y)) {
+			if(intake.getIntakeState() == hulib::IntakeState::Direct) {
+				intake.setIntakeState(hulib::IntakeState::Load);
+				intake.prevIntakeState = hulib::IntakeState::Load;
+			} else if(intake.getIntakeState() == hulib::IntakeState::Load) {
+				intake.setIntakeState(hulib::IntakeState::Direct);
+				intake.prevIntakeState = hulib::IntakeState::Direct;
+			}
 		}
 
 		intakeData = updateIntakeData();

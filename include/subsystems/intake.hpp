@@ -98,6 +98,7 @@ namespace hulib
 
         bool isHopperSort = true;
         bool isSecondarySort = true;
+        IntakeState prevIntakeState = IntakeState::Direct;
 
     private:
         void colourSortHopper();

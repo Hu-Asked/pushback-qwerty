@@ -9,35 +9,17 @@ void redHigh() {
     chassis.moveToPoint(-0.5, 57, 2000, {.minSpeed = 30, .earlyExitRange = 28});
     chassis.moveToPoint(-0.5, 57, 1000, {.maxSpeed = 40});
     chassis.waitUntilDone();
-    pros::delay(200);
-    chassis.moveToPoint(0, 46, 1000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
-    chassis.turnToPoint(12, 33.7, 1500);
-    chassis.moveToPoint(12, 33.7, 3500, {.maxSpeed = 35, .minSpeed = 20, .earlyExitRange = 1});
-
-    chassis.turnToPoint(-27, 28, 1500, {.minSpeed = 20, .earlyExitRange = 1});
-    chassis.moveToPoint(-27, 28, 2000);
+    chassis.moveToPoint(7, 48, 1000, {.forwards = false, .minSpeed = 15, .earlyExitRange = 1});
+    chassis.turnToPoint(15, 28, 1500, {.maxSpeed = 80, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPoint(15, 28, 3500, {.maxSpeed = 60, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.turnToPoint(-24, 20, 1500);
+    chassis.waitUntilDone();
     scraperPiston.toggle();
-    intake.setIntakeState(hulib::IntakeState::Direct);
-    chassis.turnToPoint(-33.5, 16, 1500, {.minSpeed = 20, .earlyExitRange = 1});
-    chassis.moveToPoint(-33.5, 16, 2000, {.maxSpeed = 75, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPose(-24, 20, 212, 2000, {.minSpeed = 10, .earlyExitRange = 2});
+    chassis.moveToPoint(-29.3, 12.4, 2000, {.maxSpeed = 90, .minSpeed = 10, .earlyExitRange = 1});
     chassis.waitUntilDone();
-    LeftDrive.move(40);
-    RightDrive.move(40);
-    pros::delay(200);
-    LeftDrive.move(0);
-    RightDrive.move(0);
-    pros::delay(1500);
-    intake.setIntakeSpeed(0);
-    chassis.moveToPoint(-18.5, 40, 2000, {.forwards = false});
-    chassis.waitUntilDone();
-    intake.setIntakeState(hulib::IntakeState::Feed);
-    intake.setScoringState(hulib::ScoringState::Long);
-    intake.setIntakeSpeed(127);
-    LeftDrive.move(-70);
-    RightDrive.move(-70);
-    pros::delay(2000);
-    LeftDrive.move(0);
-    RightDrive.move(0);
+    chassis.moveToPoint(-15, 37.8, 2000, {.forwards = false});
+    
 }
 
 void blueHigh() {

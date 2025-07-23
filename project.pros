@@ -5,7 +5,7 @@
         "target": "v5",
         "templates": {
             "HuGUI": {
-                "location": "C:\\Users\\hueth\\AppData\\Roaming\\PROS\\templates\\HuGUI@1.0.1",
+                "location": "C:\\Users\\hueth\\AppData\\Roaming\\PROS\\templates\\HuGUI@1.0.2",
                 "metadata": {
                     "origin": "local"
                 },
@@ -13,14 +13,14 @@
                 "py/object": "pros.conductor.templates.local_template.LocalTemplate",
                 "supported_kernels": "^4.1.1",
                 "system_files": [
+                    "include\\HuGUI\\gifclass.hpp",
                     "include\\HuGUI\\gifdec.h",
-                    "firmware\\HuGUI.a",
                     "include\\HuGUI\\hugui.hpp",
-                    "include\\HuGUI\\gifclass.hpp"
+                    "firmware\\HuGUI.a"
                 ],
                 "target": "v5",
                 "user_files": [],
-                "version": "1.0.1"
+                "version": "1.0.2"
             },
             "LemLib": {
                 "location": "C:\\Users\\hueth\\AppData\\Roaming\\PROS\\templates\\LemLib@0.5.5",
