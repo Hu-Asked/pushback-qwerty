@@ -26,7 +26,7 @@ namespace hulib
             if(!isSortingHopper) hopperMotor.move(intakeSpeed);
             break;
         case IntakeState::Feed:
-            firstStageIntakeMotor.move(0);
+            firstStageIntakeMotor.move(intakeSpeed * 0.12);
             secondStageIntakeMotor.move(intakeSpeed);
             hopperMotor.move(intakeSpeed);
             break;
@@ -179,6 +179,17 @@ namespace hulib
             } else if (isSortingSecondary) {
                 isSortingSecondary = false;
                 setIntakeSpeed(prevIntakeSpeed);
+            }
+            if(scoringState == hulib::ScoringState::Hold) {
+                auto colour = getColour(secondaryOptical);
+                if (colour != hulib::Colour::None && colour != colourToSort) {
+                    scoringMotor.move(0);
+                    secondStageIntakeMotor.move(0);
+                    hopperMotor.move(intakeSpeed*0.3);
+                } else {
+                    scoringMotor.move(intakeSpeed*0.3);
+                    secondStageIntakeMotor.move(intakeSpeed*0.3);
+                }
             }
             hugui::console_print(std::to_string((int) getColour(hopperOptical)) + " " + std::to_string((int) getColour(secondaryOptical)) + " " + std::to_string((int) colourToSort) + " " +
                                 std::to_string(hopperOptical.get_proximity()) + " " + std::to_string(secondaryOptical.get_proximity()), 0);

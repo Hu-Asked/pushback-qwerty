@@ -1,25 +1,81 @@
 #include "autons.hpp"
 
+void moveVolts(int volts) {
+    LeftDrive.move(volts);
+    RightDrive.move(volts);
+}
+void jiggle(int time) {
+    int start = pros::millis();
+    while(pros::millis() - start < time) {
+        moveVolts(60);
+        pros::delay(60);
+        moveVolts(0);
+        pros::delay(60);
+    }
+} 
+
+
 void redHigh() {
     chassis.setPose({0, 0, 0});
     intake.setScoringState(hulib::ScoringState::Hold);
     intake.setIntakeState(hulib::IntakeState::Load);
     intake.chooseColourToSort(hulib::Colour::Blue);
     intake.setIntakeSpeed(127);
-    chassis.moveToPoint(-0.5, 57, 2000, {.minSpeed = 30, .earlyExitRange = 28});
-    chassis.moveToPoint(-0.5, 57, 1000, {.maxSpeed = 40});
+    chassis.moveToPoint(0.2, 56, 2000, {.minSpeed = 30, .earlyExitRange = 28});
+    chassis.moveToPoint(-0.3, 56, 1100, {.maxSpeed = 40});
     chassis.waitUntilDone();
     chassis.moveToPoint(7, 48, 1000, {.forwards = false, .minSpeed = 15, .earlyExitRange = 1});
     chassis.turnToPoint(15, 28, 1500, {.maxSpeed = 80, .minSpeed = 10, .earlyExitRange = 1});
-    chassis.moveToPoint(15, 28, 3500, {.maxSpeed = 60, .minSpeed = 10, .earlyExitRange = 1});
-    chassis.turnToPoint(-24, 20, 1500);
+    chassis.moveToPoint(15, 28, 3500, {.maxSpeed = 30, .minSpeed = 5, .earlyExitRange = 1});
+    chassis.turnToPoint(-24, 20, 1500, {.minSpeed = 20, .earlyExitRange = 2});
     chassis.waitUntilDone();
+    scraperPiston.toggle(); 
+    chassis.moveToPose(-23, 19, 210, 2000, {.lead = 0.45, .minSpeed = 10, .earlyExitRange = 2});
+    chassis.waitUntilDone();
+    chassis.moveToPoint(-27.5, 12, 1200, {.minSpeed = 10, .earlyExitRange = 0.5});
+    intake.setIntakeState(hulib::IntakeState::Direct);
+    intake.setIntakeSpeed(127);
+    chassis.waitUntilDone();
+    jiggle(750);
+    chassis.moveToPose(-13.9, 36.9, 210, 1500, {.forwards = false});
+    chassis.waitUntilDone();
+    moveVolts(-40);
+    intake.setScoringState(hulib::ScoringState::Long);
+    pros::delay(500);
+    intake.setIntakeState(hulib::IntakeState::Feed);
+    intake.setIntakeSpeed(127);
+}
+
+void redSAWP() {
+    chassis.setPose({0, 0, 0});
+    intake.setScoringState(hulib::ScoringState::Hold);
+    intake.setIntakeState(hulib::IntakeState::Direct);
+    intake.chooseColourToSort(hulib::Colour::Blue);
+    intake.setIntakeSpeed(127);
+    chassis.moveToPose(0, 42, 270, 2000, {.minSpeed = 20, .earlyExitRange = 1});
     scraperPiston.toggle();
-    chassis.moveToPose(-24, 20, 212, 2000, {.minSpeed = 10, .earlyExitRange = 2});
-    chassis.moveToPoint(-29.3, 12.4, 2000, {.maxSpeed = 90, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPoint(-11, 43.8, 1500, {.minSpeed = 10, .earlyExitRange = 0.5});
     chassis.waitUntilDone();
-    chassis.moveToPoint(-15, 37.8, 2000, {.forwards = false});
-    
+    moveVolts(90  );
+    pros::delay(250);
+    jiggle(800);
+    chassis.moveToPose(24, 44.15, 270, 2000, {.forwards = false, .minSpeed = 10});
+    chassis.waitUntilDone();
+    intake.setScoringState(hulib::ScoringState::Long);
+    intake.setIntakeSpeed(127);
+    pros::delay(1500);
+    intake.setScoringState(hulib::ScoringState::Hold);
+    intake.setIntakeSpeed(127);
+    chassis.moveToPose(-2, 15, 180, 2000, {.minSpeed = 10, .earlyExitRange = 0.5});
+    scraperPiston.toggle();
+    chassis.turnToPoint(25, 16.4, 1500, {.minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPoint(25, 16.4, 5000, {.maxSpeed = 30, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.turnToPoint(35, 7, 1500, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPose(36, 6, -405, 1000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.moveToPoint(36, 6, 1000, {.forwards = false, .minSpeed = 10, .earlyExitRange = 1});
+    chassis.waitUntilDone();
+    intake.setScoringState(hulib::ScoringState::Centre);
+    intake.setIntakeSpeed(127);
 }
 
 void blueHigh() {

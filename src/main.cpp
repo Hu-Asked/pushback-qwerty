@@ -11,6 +11,7 @@ void auto2() {
 void initialize() {
 	hugui::initialize_auton_selector({
 		hugui::Auton(redHigh, "Red High", hugui::AutonType::RED),
+		hugui::Auton(redSAWP, "Red SAWP", hugui::AutonType::RED),
 		hugui::Auton(blueHigh, "Blue High", hugui::AutonType::BLUE),
 		hugui::Auton(drive_example, "Drive Example", hugui::AutonType::OTHER),
 		hugui::Auton(turn_example, "Turn Example", hugui::AutonType::OTHER),
@@ -22,10 +23,13 @@ void initialize() {
 	intake.setIntakeState(hulib::IntakeState::Direct);
 	intake.setScoringState(hulib::ScoringState::Long);
 
-	if (!pros::competition::is_connected()) 
+	// if (!pros::competition::is_connected()) 
         pros::Task update_info([&]() {  
+			std::string intakeData = "";
             while (true) {
                 hugui::update_pos(chassis.getPose().x, chassis.getPose().y, chassis.getPose().theta, 3);
+				intakeData = updateIntakeData();
+				master.print(0, 0, "%s", intakeData);
                 pros::delay(25);
             }
         }); 
@@ -127,9 +131,6 @@ void opcontrol() {
 				intake.prevIntakeState = hulib::IntakeState::Direct;
 			}
 		}
-
-		intakeData = updateIntakeData();
-		master.print(0, 0, "%s", intakeData);
 	
 		if(!isNotified && pros::millis() - startTime >= notifyTime) {
 			master.rumble("--------");

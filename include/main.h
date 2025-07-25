@@ -72,6 +72,7 @@
  #ifdef __cplusplus
  extern "C" {
  #endif
+ std::string updateIntakeData(void);
  void autonomous(void);
  void initialize(void);
  void disabled(void);
